@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Boxes, Search, AlertCircle, CheckCircle, ArrowDownRight } from 'lucide-react';
+import { Boxes, Search, AlertCircle } from 'lucide-react';
 import api from '../api/client';
 import { InventoryItem } from '../types';
 import { Card } from '../components/ui/Card';
@@ -35,25 +35,25 @@ export const Inventory: React.FC = () => {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 glass-card p-4">
         <div>
-          <h2 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            <Boxes className="w-5 h-5 text-slate-700" />
+          <h2 className="text-base font-bold text-[#f4f2ff] tracking-tight flex items-center gap-2">
+            <Boxes className="w-5 h-5 text-[#9875ff]" />
             Multi-Echelon Inventory & Buffer Depletion Monitor
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-[#a6a4c3] mt-0.5">
             Real-time on-hand stocks, safety stock runout projections, and days-of-supply health across manufacturing plants.
           </p>
         </div>
 
         <div className="relative w-72">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+          <Search className="w-4 h-4 text-[#a6a4c3] absolute left-3 top-2.5" />
           <input
             type="text"
             placeholder="Search parts, SKUs, or facilities..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-slate-900"
+            className="w-full pl-9 pr-3 py-1.5 text-xs bg-[#080817]/80 text-[#f4f2ff] placeholder-[#a6a4c3]/60 border border-[rgba(160,140,255,0.2)] rounded-lg focus:outline-none focus:border-[#9875ff] focus:ring-1 focus:ring-[#9875ff]"
           />
         </div>
       </div>
@@ -62,7 +62,7 @@ export const Inventory: React.FC = () => {
       <Card title={`Tracked SKUs & Material Buffers (${filteredInventory.length})`}>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-600 font-mono uppercase text-[11px] border-b border-slate-200">
+            <thead className="bg-[#080817]/70 text-[#a6a4c3] font-mono uppercase text-[11px] border-b border-[rgba(160,140,255,0.15)]">
               <tr>
                 <th className="py-2.5 px-3">Material SKU / Name</th>
                 <th className="py-2.5 px-3">Facility Location</th>
@@ -73,7 +73,7 @@ export const Inventory: React.FC = () => {
                 <th className="py-2.5 px-3">Health Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[rgba(160,140,255,0.08)]">
               {filteredInventory.map((item) => {
                 const isCriticalStock = item.quantity_on_hand <= item.safety_stock;
                 const isWarningStock =
@@ -81,29 +81,29 @@ export const Inventory: React.FC = () => {
                   item.quantity_on_hand <= item.reorder_point;
 
                 return (
-                  <tr key={item.id} className="hover:bg-slate-50/70 transition-colors">
+                  <tr key={item.id} className="hover:bg-white/[0.03] transition-colors">
                     <td className="py-2.5 px-3">
-                      <span className="font-mono text-[10px] text-slate-400 block">{item.material_sku}</span>
-                      <span className="font-semibold text-slate-900">{item.material_name}</span>
+                      <span className="font-mono text-[10px] text-[#9875ff] block">{item.material_sku}</span>
+                      <span className="font-semibold text-[#f4f2ff]">{item.material_name}</span>
                     </td>
-                    <td className="py-2.5 px-3 text-slate-600 font-medium">{item.facility_name}</td>
-                    <td className="py-2.5 px-3 font-mono font-semibold text-slate-900">
+                    <td className="py-2.5 px-3 text-[#a6a4c3] font-medium">{item.facility_name}</td>
+                    <td className="py-2.5 px-3 font-mono font-semibold text-[#f4f2ff]">
                       {item.quantity_on_hand.toLocaleString()}
                     </td>
-                    <td className="py-2.5 px-3 font-mono text-slate-500">
+                    <td className="py-2.5 px-3 font-mono text-[#a6a4c3]">
                       {item.safety_stock.toLocaleString()}
                     </td>
-                    <td className="py-2.5 px-3 font-mono text-slate-500">
+                    <td className="py-2.5 px-3 font-mono text-[#a6a4c3]">
                       {item.reorder_point.toLocaleString()}
                     </td>
                     <td className="py-2.5 px-3 font-mono font-bold">
                       <span
                         className={
                           item.days_of_supply < 10
-                            ? 'text-rose-600'
+                            ? 'text-[#ff718a]'
                             : item.days_of_supply < 18
-                            ? 'text-amber-600'
-                            : 'text-emerald-700'
+                            ? 'text-[#f5c66b]'
+                            : 'text-[#35d6a0]'
                         }
                       >
                         {item.days_of_supply} days

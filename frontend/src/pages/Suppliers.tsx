@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Filter, Download, Upload, Trash2, Edit2, AlertCircle } from 'lucide-react';
+import { Plus, Search, Trash2, Edit2 } from 'lucide-react';
 import api from '../api/client';
 import { Supplier } from '../types';
 import { Card } from '../components/ui/Card';
@@ -16,7 +16,6 @@ export const Suppliers: React.FC = () => {
   // Modal states
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isImportOpen, setIsImportOpen] = useState(false);
   const [activeSupplier, setActiveSupplier] = useState<Supplier | null>(null);
 
   // Form inputs
@@ -87,55 +86,48 @@ export const Suppliers: React.FC = () => {
     }
   };
 
-  const openEditModal = (s: Supplier) => {
-    setActiveSupplier(s);
+  const openEditModal = (supplier: Supplier) => {
+    setActiveSupplier(supplier);
     setFormData({
-      name: s.name,
-      code: s.code,
-      tier: s.tier,
-      country: s.country,
-      city: s.city,
-      daily_capacity: s.daily_capacity,
-      current_utilization: s.current_utilization,
-      lead_time_days: s.lead_time_days,
-      unit_cost: s.unit_cost,
-      reliability_score: s.reliability_score,
-      financial_risk: s.financial_risk,
-      operational_risk: s.operational_risk,
-      status: s.status,
+      name: supplier.name,
+      code: supplier.code,
+      tier: supplier.tier,
+      country: supplier.country,
+      city: supplier.city,
+      daily_capacity: supplier.daily_capacity,
+      current_utilization: supplier.current_utilization,
+      lead_time_days: supplier.lead_time_days,
+      unit_cost: supplier.unit_cost,
+      reliability_score: supplier.reliability_score,
+      financial_risk: supplier.financial_risk,
+      operational_risk: supplier.operational_risk,
+      status: supplier.status,
     });
     setIsEditOpen(true);
   };
 
   const filteredSuppliers = suppliers.filter((s) => {
+    const matchesTier = selectedTier === 'ALL' || s.tier === selectedTier;
     const matchesSearch =
       s.name.toLowerCase().includes(search.toLowerCase()) ||
       s.code.toLowerCase().includes(search.toLowerCase()) ||
-      s.country.toLowerCase().includes(search.toLowerCase());
-    const matchesTier = selectedTier === 'ALL' || s.tier === selectedTier;
-    return matchesSearch && matchesTier;
+      s.country.toLowerCase().includes(search.toLowerCase()) ||
+      s.city.toLowerCase().includes(search.toLowerCase());
+    return matchesTier && matchesSearch;
   });
 
   return (
     <div className="space-y-5">
       {/* Action Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 glass-card p-4">
         <div>
-          <h2 className="text-base font-bold text-slate-900 tracking-tight">Supplier Directory & Resilience Profiles</h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Manage multi-tier supplier catalog, operating capacities, lead times, and single-source risk indices.
+          <h2 className="text-base font-bold text-[#f4f2ff] tracking-tight">Supplier Directory & Risk Profiles</h2>
+          <p className="text-xs text-[#a6a4c3] mt-0.5">
+            Operational capacities, lead times, geographic coordinates, and topological risk indexes.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => window.open('/api/v1/suppliers/export/csv', '_blank')}
-            icon={<Download className="w-3.5 h-3.5" />}
-          >
-            Export CSV
-          </Button>
           <Button
             variant="primary"
             size="sm"
@@ -165,28 +157,28 @@ export const Suppliers: React.FC = () => {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3 rounded-lg border border-slate-200">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 glass-card p-3">
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+          <Search className="w-4 h-4 text-[#a6a4c3] absolute left-3 top-2.5" />
           <input
             type="text"
             placeholder="Search suppliers by name, code, country..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-slate-900"
+            className="w-full pl-9 pr-3 py-1.5 text-xs bg-[#080817]/80 text-[#f4f2ff] placeholder-[#a6a4c3]/60 border border-[rgba(160,140,255,0.2)] rounded-lg focus:outline-none focus:border-[#9875ff] focus:ring-1 focus:ring-[#9875ff]"
           />
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-500 font-medium">Tier:</span>
+          <span className="text-xs text-[#a6a4c3] font-medium">Tier:</span>
           {['ALL', 'Tier 1', 'Tier 2', 'Tier 3'].map((tier) => (
             <button
               key={tier}
               onClick={() => setSelectedTier(tier)}
-              className={`px-2.5 py-1 text-xs rounded-md font-medium transition-colors ${
+              className={`px-2.5 py-1 text-xs rounded-md font-medium transition-all ${
                 selectedTier === tier
-                  ? 'bg-slate-900 text-white'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  ? 'bg-gradient-to-r from-[#7957e8] to-[#9875ff] text-white shadow-[0_0_10px_rgba(152,117,255,0.35)]'
+                  : 'bg-white/5 text-[#a6a4c3] hover:text-[#f4f2ff] hover:bg-white/10'
               }`}
             >
               {tier}
@@ -199,7 +191,7 @@ export const Suppliers: React.FC = () => {
       <Card title={`Suppliers (${filteredSuppliers.length})`}>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-600 font-mono uppercase text-[11px] border-b border-slate-200">
+            <thead className="bg-[#080817]/70 text-[#a6a4c3] font-mono uppercase text-[11px] border-b border-[rgba(160,140,255,0.15)]">
               <tr>
                 <th className="py-2.5 px-3">Code / Name</th>
                 <th className="py-2.5 px-3">Tier</th>
@@ -212,36 +204,36 @@ export const Suppliers: React.FC = () => {
                 <th className="py-2.5 px-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[rgba(160,140,255,0.08)]">
               {filteredSuppliers.map((s) => (
-                <tr key={s.id} className="hover:bg-slate-50/70 transition-colors">
+                <tr key={s.id} className="hover:bg-white/[0.03] transition-colors">
                   <td className="py-2.5 px-3">
-                    <span className="font-mono text-slate-400 text-[10px] block">{s.code}</span>
-                    <span className="font-semibold text-slate-900">{s.name}</span>
+                    <span className="font-mono text-[#9875ff] text-[10px] block">{s.code}</span>
+                    <span className="font-semibold text-[#f4f2ff]">{s.name}</span>
                   </td>
                   <td className="py-2.5 px-3 font-mono">
-                    <span className="px-1.5 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700">
+                    <span className="px-2 py-0.5 rounded text-[11px] bg-[#7957e8]/15 text-[#9875ff] border border-[#7957e8]/30">
                       {s.tier}
                     </span>
                   </td>
-                  <td className="py-2.5 px-3 text-slate-600">
+                  <td className="py-2.5 px-3 text-[#a6a4c3]">
                     {s.city}, {s.country}
                   </td>
-                  <td className="py-2.5 px-3 font-mono">
-                    {s.daily_capacity} <span className="text-[10px] text-slate-400">({s.current_utilization}%)</span>
+                  <td className="py-2.5 px-3 font-mono text-[#f4f2ff]">
+                    {s.daily_capacity} <span className="text-[10px] text-[#a6a4c3]/70">({s.current_utilization}%)</span>
                   </td>
-                  <td className="py-2.5 px-3 font-mono">{s.lead_time_days} days</td>
-                  <td className="py-2.5 px-3 font-mono font-medium text-emerald-700">
+                  <td className="py-2.5 px-3 font-mono text-[#f4f2ff]">{s.lead_time_days} days</td>
+                  <td className="py-2.5 px-3 font-mono font-medium text-[#35d6a0]">
                     {(s.reliability_score * 100).toFixed(0)}%
                   </td>
                   <td className="py-2.5 px-3">
                     <span
                       className={`font-mono text-xs font-semibold ${
                         s.financial_risk + s.operational_risk > 0.6
-                          ? 'text-rose-600'
+                          ? 'text-[#ff718a]'
                           : s.financial_risk + s.operational_risk > 0.4
-                          ? 'text-amber-600'
-                          : 'text-slate-700'
+                          ? 'text-[#f5c66b]'
+                          : 'text-[#35d6a0]'
                       }`}
                     >
                       {((s.financial_risk + s.operational_risk) / 2).toFixed(2)}
@@ -255,14 +247,14 @@ export const Suppliers: React.FC = () => {
                   <td className="py-2.5 px-3 text-right space-x-1">
                     <button
                       onClick={() => openEditModal(s)}
-                      className="p-1 rounded text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                      className="p-1 rounded text-[#a6a4c3] hover:text-[#9875ff] hover:bg-white/5 transition-colors"
                       title="Edit supplier"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => handleDelete(s.id, s.name)}
-                      className="p-1 rounded text-slate-400 hover:text-rose-600 hover:bg-rose-50"
+                      className="p-1 rounded text-[#a6a4c3] hover:text-[#ff718a] hover:bg-white/5 transition-colors"
                       title="Delete supplier"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -289,31 +281,31 @@ export const Suppliers: React.FC = () => {
         <form onSubmit={isCreateOpen ? handleCreate : handleEdit} className="space-y-4">
           <div className="grid grid-cols-2 gap-3 text-xs">
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">Company Name</label>
+              <label className="font-semibold text-[#f4f2ff] block mb-1">Company Name</label>
               <input
                 type="text"
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:ring-1 focus:ring-slate-900"
+                className="w-full px-3 py-1.5 bg-[#080817]/90 text-[#f4f2ff] border border-[rgba(160,140,255,0.2)] rounded-lg focus:ring-1 focus:ring-[#9875ff] focus:border-[#9875ff]"
               />
             </div>
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">Supplier Code</label>
+              <label className="font-semibold text-[#f4f2ff] block mb-1">Supplier Code</label>
               <input
                 type="text"
                 required
                 value={formData.code}
                 onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                className="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:ring-1 focus:ring-slate-900 font-mono"
+                className="w-full px-3 py-1.5 bg-[#080817]/90 text-[#f4f2ff] border border-[rgba(160,140,255,0.2)] rounded-lg focus:ring-1 focus:ring-[#9875ff] focus:border-[#9875ff] font-mono"
               />
             </div>
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">Tier Level</label>
+              <label className="font-semibold text-[#f4f2ff] block mb-1">Tier Level</label>
               <select
                 value={formData.tier}
                 onChange={(e) => setFormData({ ...formData, tier: e.target.value as any })}
-                className="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:ring-1 focus:ring-slate-900"
+                className="w-full px-3 py-1.5 bg-[#080817]/90 text-[#f4f2ff] border border-[rgba(160,140,255,0.2)] rounded-lg focus:ring-1 focus:ring-[#9875ff] focus:border-[#9875ff]"
               >
                 <option value="Tier 1">Tier 1 (Direct Module Assembler)</option>
                 <option value="Tier 2">Tier 2 (Component Specialist)</option>
@@ -321,11 +313,11 @@ export const Suppliers: React.FC = () => {
               </select>
             </div>
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">Status</label>
+              <label className="font-semibold text-[#f4f2ff] block mb-1">Status</label>
               <select
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                className="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:ring-1 focus:ring-slate-900"
+                className="w-full px-3 py-1.5 bg-[#080817]/90 text-[#f4f2ff] border border-[rgba(160,140,255,0.2)] rounded-lg focus:ring-1 focus:ring-[#9875ff] focus:border-[#9875ff]"
               >
                 <option value="ACTIVE">ACTIVE</option>
                 <option value="DISRUPTED">DISRUPTED</option>
@@ -333,48 +325,48 @@ export const Suppliers: React.FC = () => {
               </select>
             </div>
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">Country</label>
+              <label className="font-semibold text-[#f4f2ff] block mb-1">Country</label>
               <input
                 type="text"
                 required
                 value={formData.country}
                 onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                className="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:ring-1 focus:ring-slate-900"
+                className="w-full px-3 py-1.5 bg-[#080817]/90 text-[#f4f2ff] border border-[rgba(160,140,255,0.2)] rounded-lg focus:ring-1 focus:ring-[#9875ff] focus:border-[#9875ff]"
               />
             </div>
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">City</label>
+              <label className="font-semibold text-[#f4f2ff] block mb-1">City</label>
               <input
                 type="text"
                 required
                 value={formData.city}
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                className="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:ring-1 focus:ring-slate-900"
+                className="w-full px-3 py-1.5 bg-[#080817]/90 text-[#f4f2ff] border border-[rgba(160,140,255,0.2)] rounded-lg focus:ring-1 focus:ring-[#9875ff] focus:border-[#9875ff]"
               />
             </div>
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">Daily Capacity (Units)</label>
+              <label className="font-semibold text-[#f4f2ff] block mb-1">Daily Capacity (Units)</label>
               <input
                 type="number"
                 required
                 value={formData.daily_capacity}
                 onChange={(e) => setFormData({ ...formData, daily_capacity: parseFloat(e.target.value) || 0 })}
-                className="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:ring-1 focus:ring-slate-900 font-mono"
+                className="w-full px-3 py-1.5 bg-[#080817]/90 text-[#f4f2ff] border border-[rgba(160,140,255,0.2)] rounded-lg focus:ring-1 focus:ring-[#9875ff] focus:border-[#9875ff] font-mono"
               />
             </div>
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">Lead Time (Days)</label>
+              <label className="font-semibold text-[#f4f2ff] block mb-1">Lead Time (Days)</label>
               <input
                 type="number"
                 required
                 value={formData.lead_time_days}
                 onChange={(e) => setFormData({ ...formData, lead_time_days: parseInt(e.target.value) || 0 })}
-                className="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:ring-1 focus:ring-slate-900 font-mono"
+                className="w-full px-3 py-1.5 bg-[#080817]/90 text-[#f4f2ff] border border-[rgba(160,140,255,0.2)] rounded-lg focus:ring-1 focus:ring-[#9875ff] focus:border-[#9875ff] font-mono"
               />
             </div>
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+          <div className="flex justify-end gap-2 pt-3 border-t border-[rgba(160,140,255,0.12)]">
             <Button
               type="button"
               variant="secondary"

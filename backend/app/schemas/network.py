@@ -143,6 +143,7 @@ class NetworkGraphNode(BaseModel):
     status: str
     is_spof: bool = False
     betweenness_centrality: float = 0.0
+    position: Dict[str, float] = {"x": 0, "y": 0}
     details: Dict[str, Any] = {}
 
 class NetworkGraphEdge(BaseModel):

@@ -3,13 +3,11 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
   FlaskConical,
   Play,
-  Download,
   ShieldCheck,
   TrendingDown,
   AlertCircle,
   Clock,
   Sparkles,
-  Layers,
   FileText
 } from 'lucide-react';
 import {
@@ -22,14 +20,11 @@ import {
   CartesianGrid,
   AreaChart,
   Area,
-  BarChart,
-  Bar,
 } from 'recharts';
 import api from '../api/client';
 import { DisruptionScenario, SimulationRun } from '../types';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { Badge } from '../components/ui/Badge';
 import { MetricCard } from '../components/ui/MetricCard';
 
 export const SimulationLab: React.FC = () => {
@@ -81,32 +76,29 @@ export const SimulationLab: React.FC = () => {
     }
   };
 
-  const selectedScenario = scenarios.find((s) => s.id === selectedScenarioId);
-
   return (
     <div className="space-y-6">
-      {/* Simulation Command Header */}
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      {/* Header & Simulator Controls */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 glass-card p-4">
         <div>
-          <h2 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            <FlaskConical className="w-5 h-5 text-blue-600" />
-            Deterministic Simulation Lab
+          <h2 className="text-base font-bold text-[#f4f2ff] tracking-tight flex items-center gap-2">
+            <FlaskConical className="w-5 h-5 text-[#9875ff]" />
+            Deterministic Discrete-Event Simulation Lab
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Discrete-event simulation computing cascading BOM constraints, finite buffer runout, backlog, and financial losses.
+          <p className="text-xs text-[#a6a4c3] mt-0.5">
+            Finite-capacity multi-echelon inventory conservation engine powered by SimPy, NetworkX, and Pandas.
           </p>
         </div>
 
-        {/* Scenario selector & Run button */}
-        <div className="flex items-center gap-3 w-full lg:w-auto">
+        <div className="flex items-center gap-3 w-full md:w-auto">
           <select
             value={selectedScenarioId}
             onChange={(e) => setSelectedScenarioId(e.target.value)}
-            className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-900 flex-1 lg:w-80"
+            className="flex-1 md:w-72 px-3 py-2 bg-[#080817]/90 text-[#f4f2ff] border border-[rgba(160,140,255,0.25)] rounded-lg text-xs focus:ring-1 focus:ring-[#9875ff]"
           >
-            {scenarios.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name} ({s.horizon_days}d)
+            {scenarios.map((scen) => (
+              <option key={scen.id} value={scen.id} className="bg-[#0d1024] text-[#f4f2ff]">
+                {scen.name} ({scen.horizon_days}d)
               </option>
             ))}
           </select>
@@ -116,7 +108,7 @@ export const SimulationLab: React.FC = () => {
             size="md"
             onClick={handleExecuteSimulation}
             isLoading={isRunning}
-            className="bg-blue-600 hover:bg-blue-500 flex-shrink-0"
+            className="flex-shrink-0"
             icon={<Play className="w-3.5 h-3.5 fill-white" />}
           >
             Execute Model
@@ -133,65 +125,63 @@ export const SimulationLab: React.FC = () => {
               value={`$${activeSimulation.total_revenue_loss.toLocaleString()}`}
               subtitle="Lost margin & penalties"
               statusVariant="critical"
-              icon={<TrendingDown className="w-4 h-4 text-rose-600" />}
+              icon={<TrendingDown className="w-4 h-4 text-[#ff718a]" />}
             />
             <MetricCard
               title="Production at Risk"
               value={`${Math.round(activeSimulation.total_units_lost).toLocaleString()}`}
               subtitle="Unproduced units"
               statusVariant="critical"
-              icon={<AlertCircle className="w-4 h-4 text-rose-600" />}
+              icon={<AlertCircle className="w-4 h-4 text-[#ff718a]" />}
             />
             <MetricCard
               title="Resilience Rating"
               value={`${activeSimulation.resilience_score}/100`}
               subtitle="Deterministic score"
               statusVariant="warning"
-              icon={<ShieldCheck className="w-4 h-4 text-amber-600" />}
+              icon={<ShieldCheck className="w-4 h-4 text-[#f5c66b]" />}
             />
             <MetricCard
               title="Earliest Stockout"
               value={activeSimulation.stockout_day ? `Day ${activeSimulation.stockout_day}` : 'None'}
               subtitle="Buffer exhaustion"
               statusVariant={activeSimulation.stockout_day ? 'critical' : 'success'}
-              icon={<Clock className="w-4 h-4 text-slate-600" />}
+              icon={<Clock className="w-4 h-4 text-[#a6a4c3]" />}
             />
             <MetricCard
               title="Max Delivery Delay"
               value={`${activeSimulation.max_delay_days} Days`}
               subtitle="Customer fulfillment backlog"
               statusVariant="warning"
-              icon={<Clock className="w-4 h-4 text-amber-600" />}
+              icon={<Clock className="w-4 h-4 text-[#f5c66b]" />}
             />
             <MetricCard
               title="Sim Status"
               value="VERIFIED"
               subtitle="ID: SHA256-DETERMINISTIC"
               statusVariant="success"
-              icon={<ShieldCheck className="w-4 h-4 text-emerald-600" />}
+              icon={<ShieldCheck className="w-4 h-4 text-[#35d6a0]" />}
             />
           </div>
 
           {/* Simulation Methodology Banner */}
-          <div className="p-3.5 bg-slate-900 rounded-lg text-slate-300 text-xs flex items-center justify-between font-mono">
+          <div className="p-3.5 bg-[#0d1024]/90 border border-[rgba(160,140,255,0.18)] rounded-xl text-[#a6a4c3] text-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3 font-mono shadow-sm">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
-              <span>DETERMINISTIC PRINCIPLE: LLMs have NOT fabricated these values. Calculated via BOM explosion & finite inventory conservation.</span>
+              <span className="w-2 h-2 rounded-full bg-[#35d6a0] shadow-[0_0_8px_#35d6a0]" />
+              <span className="text-[#f4f2ff]">DETERMINISTIC PRINCIPLE: LLMs have NOT fabricated these values. Calculated via BOM explosion & finite inventory conservation.</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-shrink-0">
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700"
                 onClick={() => window.open(`/api/v1/reports/pdf/${activeSimulation.id}`, '_blank')}
-                icon={<FileText className="w-3.5 h-3.5 text-blue-400" />}
+                icon={<FileText className="w-3.5 h-3.5 text-[#55a8ff]" />}
               >
                 Export Executive PDF
               </Button>
               <Button
                 variant="primary"
                 size="sm"
-                className="bg-emerald-600 hover:bg-emerald-500 text-white"
                 onClick={() => navigate(`/mitigation?simulation_id=${activeSimulation.id}`)}
                 icon={<Sparkles className="w-3.5 h-3.5" />}
               >
@@ -210,14 +200,19 @@ export const SimulationLab: React.FC = () => {
               <div className="h-64 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={activeSimulation.daily_metrics}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-                    <XAxis dataKey="day" stroke="#94A3B8" fontSize={11} unit="d" />
-                    <YAxis stroke="#94A3B8" fontSize={11} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(160,140,255,0.08)" />
+                    <XAxis dataKey="day" stroke="#a6a4c3" fontSize={11} unit="d" tickLine={false} />
+                    <YAxis stroke="#a6a4c3" fontSize={11} tickLine={false} />
                     <Tooltip
-                      contentStyle={{ backgroundColor: '#0B132B', border: 'none', borderRadius: '8px', color: '#FFF' }}
+                      contentStyle={{
+                        backgroundColor: 'rgba(13,16,36,0.95)',
+                        border: '1px solid rgba(160,140,255,0.25)',
+                        borderRadius: '10px',
+                        color: '#f4f2ff',
+                      }}
                     />
-                    <Line type="monotone" dataKey="baseline_production" stroke="#94A3B8" strokeDasharray="3 3" name="Baseline Target" />
-                    <Line type="monotone" dataKey="actual_production" stroke="#0284C7" strokeWidth={2.5} name="Actual Feasible" dot={false} />
+                    <Line type="monotone" dataKey="baseline_production" stroke="#55a8ff" strokeDasharray="3 3" name="Baseline Target" />
+                    <Line type="monotone" dataKey="actual_production" stroke="#9875ff" strokeWidth={2.5} name="Actual Feasible" dot={false} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -233,18 +228,23 @@ export const SimulationLab: React.FC = () => {
                   <AreaChart data={activeSimulation.daily_metrics}>
                     <defs>
                       <linearGradient id="lossGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#EF4444" stopOpacity={0.4} />
-                        <stop offset="95%" stopColor="#EF4444" stopOpacity={0.0} />
+                        <stop offset="5%" stopColor="#ff718a" stopOpacity={0.4} />
+                        <stop offset="95%" stopColor="#ff718a" stopOpacity={0.0} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-                    <XAxis dataKey="day" stroke="#94A3B8" fontSize={11} unit="d" />
-                    <YAxis stroke="#94A3B8" fontSize={11} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(160,140,255,0.08)" />
+                    <XAxis dataKey="day" stroke="#a6a4c3" fontSize={11} unit="d" tickLine={false} />
+                    <YAxis stroke="#a6a4c3" fontSize={11} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} tickLine={false} />
                     <Tooltip
                       formatter={(v: any) => [`$${Number(v).toLocaleString()}`, 'Cumulative Loss']}
-                      contentStyle={{ backgroundColor: '#0B132B', border: 'none', borderRadius: '8px', color: '#FFF' }}
+                      contentStyle={{
+                        backgroundColor: 'rgba(13,16,36,0.95)',
+                        border: '1px solid rgba(160,140,255,0.25)',
+                        borderRadius: '10px',
+                        color: '#f4f2ff',
+                      }}
                     />
-                    <Area type="monotone" dataKey="cumulative_financial_loss" stroke="#EF4444" strokeWidth={2} fillOpacity={1} fill="url(#lossGradient)" />
+                    <Area type="monotone" dataKey="cumulative_financial_loss" stroke="#ff718a" strokeWidth={2} fillOpacity={1} fill="url(#lossGradient)" />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -258,7 +258,7 @@ export const SimulationLab: React.FC = () => {
           >
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-600 font-mono uppercase text-[11px] border-b border-slate-200">
+                <thead className="bg-[#080817]/70 text-[#a6a4c3] font-mono uppercase text-[11px] border-b border-[rgba(160,140,255,0.15)]">
                   <tr>
                     <th className="py-2.5 px-3">Product Name</th>
                     <th className="py-2.5 px-3">Target Demand</th>
@@ -268,23 +268,23 @@ export const SimulationLab: React.FC = () => {
                     <th className="py-2.5 px-3">Stockout Day</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-[rgba(160,140,255,0.08)]">
                   {activeSimulation.product_impacts?.map((p) => (
-                    <tr key={p.product_id} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="py-2.5 px-3 font-semibold text-slate-900">{p.product_name}</td>
-                      <td className="py-2.5 px-3 font-mono">{p.units_demanded.toLocaleString()}</td>
-                      <td className="py-2.5 px-3 font-mono">{p.units_produced.toLocaleString()}</td>
-                      <td className="py-2.5 px-3 font-mono font-bold text-rose-600">
+                    <tr key={p.product_id} className="hover:bg-white/[0.03] transition-colors">
+                      <td className="py-2.5 px-3 font-semibold text-[#f4f2ff]">{p.product_name}</td>
+                      <td className="py-2.5 px-3 font-mono text-[#a6a4c3]">{p.units_demanded.toLocaleString()}</td>
+                      <td className="py-2.5 px-3 font-mono text-[#a6a4c3]">{p.units_produced.toLocaleString()}</td>
+                      <td className="py-2.5 px-3 font-mono font-bold text-[#ff718a]">
                         {p.units_short > 0 ? p.units_short.toLocaleString() : '0'}
                       </td>
-                      <td className="py-2.5 px-3 font-mono font-semibold text-slate-900">
+                      <td className="py-2.5 px-3 font-mono font-semibold text-[#f4f2ff]">
                         ${p.total_revenue_loss.toLocaleString()}
                       </td>
                       <td className="py-2.5 px-3 font-mono">
                         {p.stockout_day ? (
-                          <span className="text-rose-600 font-bold">Day {p.stockout_day}</span>
+                          <span className="text-[#ff718a] font-bold">Day {p.stockout_day}</span>
                         ) : (
-                          <span className="text-emerald-700">None</span>
+                          <span className="text-[#35d6a0]">None</span>
                         )}
                       </td>
                     </tr>

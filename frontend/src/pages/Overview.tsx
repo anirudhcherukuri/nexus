@@ -5,13 +5,10 @@ import {
   Building2,
   AlertTriangle,
   ShieldAlert,
-  Boxes,
   Activity,
   ArrowRight,
   TrendingDown,
-  CheckCircle2,
   Sparkles,
-  Layers
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -75,18 +72,18 @@ export const Overview: React.FC = () => {
   }, []);
 
   const riskDistributionData = [
-    { name: 'Critical Risk', count: 4, color: '#EF4444' },
-    { name: 'High Risk', count: 8, color: '#F97316' },
-    { name: 'Medium Risk', count: 12, color: '#F59E0B' },
-    { name: 'Low Risk', count: 6, color: '#10B981' },
+    { name: 'Critical Risk', count: 4, color: '#FF718A' },
+    { name: 'High Risk', count: 8, color: '#9875FF' },
+    { name: 'Medium Risk', count: 12, color: '#55A8FF' },
+    { name: 'Low Risk', count: 6, color: '#35D6A0' },
   ];
 
   const plantUtilizationData = [
-    { name: 'Detroit Plant', capacity: 1200, utilization: 85, color: '#0284C7' },
-    { name: 'Stuttgart Plant', capacity: 1000, utilization: 80, color: '#0284C7' },
-    { name: 'Tokyo Hub', capacity: 900, utilization: 78, color: '#0284C7' },
-    { name: 'Ohio Works', capacity: 1500, utilization: 92, color: '#EF4444' },
-    { name: 'Monterrey Plant', capacity: 1100, utilization: 82, color: '#0284C7' },
+    { name: 'Detroit Plant', capacity: 1200, utilization: 85, color: '#7957E8' },
+    { name: 'Stuttgart Plant', capacity: 1000, utilization: 80, color: '#9875FF' },
+    { name: 'Tokyo Hub', capacity: 900, utilization: 78, color: '#55A8FF' },
+    { name: 'Ohio Works', capacity: 1500, utilization: 92, color: '#FF718A' },
+    { name: 'Monterrey Plant', capacity: 1100, utilization: 82, color: '#42D9E8' },
   ];
 
   const simulationTrendData = [
@@ -102,28 +99,29 @@ export const Overview: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Banner: Agent Intelligence Alert */}
-      <div className="bg-gradient-to-r from-slate-900 via-[#1C2541] to-slate-900 border border-slate-800 rounded-xl p-5 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
-        <div className="space-y-1">
+      <div className="glass-card relative overflow-hidden p-6 border border-[#9875ff]/30 shadow-[0_0_30px_rgba(152,117,255,0.12)] flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#7957e8]/20 via-[#42d9e8]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+        <div className="space-y-1.5 relative z-10">
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500 text-white">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#7957e8] text-white shadow-[0_0_10px_rgba(121,87,232,0.5)]">
               NEXUS AI ADVISORY
             </span>
-            <span className="text-xs text-slate-300">Deterministic Model Run #SIM-4029</span>
+            <span className="text-xs text-[#a6a4c3] font-mono">Deterministic Model Run #SIM-4029</span>
           </div>
-          <h2 className="text-base font-semibold tracking-tight text-white">
+          <h2 className="text-base font-semibold tracking-tight text-[#f4f2ff]">
             Primary Semiconductor Single-Point-of-Failure Detected: Potential $1.42M Exposure
           </h2>
-          <p className="text-xs text-slate-300 max-w-3xl">
+          <p className="text-xs text-[#a6a4c3] max-w-3xl leading-relaxed">
             Simulated 21-day fab outage at Taiwan Microelectronics will exhaust Detroit and Stuttgart buffer stock by Day 12.
             AI Multi-Agent portfolio recommended secondary supplier activation and air freight priority.
           </p>
         </div>
-        <div className="flex items-center gap-2.5 flex-shrink-0">
+        <div className="flex items-center gap-2.5 flex-shrink-0 relative z-10">
           <Button
             variant="secondary"
             size="sm"
             onClick={() => navigate('/agents')}
-            icon={<Sparkles className="w-3.5 h-3.5 text-blue-600" />}
+            icon={<Sparkles className="w-3.5 h-3.5 text-[#9875ff]" />}
           >
             Open AI Agent Briefing
           </Button>
@@ -131,7 +129,6 @@ export const Overview: React.FC = () => {
             variant="primary"
             size="sm"
             onClick={() => navigate('/simulation')}
-            className="bg-blue-600 hover:bg-blue-500"
             icon={<ArrowRight className="w-3.5 h-3.5" />}
           >
             Run Simulation Lab
@@ -145,41 +142,41 @@ export const Overview: React.FC = () => {
           title="Total Suppliers"
           value={stats.totalSuppliers}
           subtitle="Tiers 1, 2, and 3"
-          icon={<Truck className="w-4 h-4 text-blue-600" />}
+          icon={<Truck className="w-4 h-4 text-[#9875ff]" />}
         />
         <MetricCard
           title="Facilities"
           value={stats.totalFacilities}
           subtitle="5 Plants / 3 DCs"
-          icon={<Building2 className="w-4 h-4 text-slate-600" />}
+          icon={<Building2 className="w-4 h-4 text-[#55a8ff]" />}
         />
         <MetricCard
           title="Active Disruptions"
           value={stats.activeDisruptions}
           subtitle="1 Outage / 1 Port Delay"
           statusVariant="warning"
-          icon={<AlertTriangle className="w-4 h-4 text-amber-600" />}
+          icon={<AlertTriangle className="w-4 h-4 text-[#f5c66b]" />}
         />
         <MetricCard
           title="Critical SPOFs"
           value={stats.spofCount}
           subtitle="Single Points of Failure"
           statusVariant="critical"
-          icon={<ShieldAlert className="w-4 h-4 text-rose-600" />}
+          icon={<ShieldAlert className="w-4 h-4 text-[#ff718a]" />}
         />
         <MetricCard
           title="Resilience Score"
           value={`${stats.resilienceScore}/100`}
           trend={{ value: '-6.2%', isPositive: false }}
           statusVariant="warning"
-          icon={<Activity className="w-4 h-4 text-amber-600" />}
+          icon={<Activity className="w-4 h-4 text-[#42d9e8]" />}
         />
         <MetricCard
           title="At-Risk Exposure"
           value={`$${(stats.financialLossAtRisk / 1000000).toFixed(2)}M`}
           subtitle="Projected 60-day loss"
           statusVariant="critical"
-          icon={<TrendingDown className="w-4 h-4 text-rose-600" />}
+          icon={<TrendingDown className="w-4 h-4 text-[#ff718a]" />}
         />
       </div>
 
@@ -194,15 +191,35 @@ export const Overview: React.FC = () => {
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={simulationTrendData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-                <XAxis dataKey="day" stroke="#94A3B8" fontSize={11} />
-                <YAxis stroke="#94A3B8" fontSize={11} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(160,140,255,0.08)" />
+                <XAxis dataKey="day" stroke="#a6a4c3" fontSize={11} tickLine={false} />
+                <YAxis stroke="#a6a4c3" fontSize={11} tickLine={false} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#0B132B', border: 'none', borderRadius: '8px', color: '#FFF' }}
-                  labelStyle={{ color: '#94A3B8' }}
+                  contentStyle={{
+                    backgroundColor: 'rgba(13,16,36,0.95)',
+                    border: '1px solid rgba(160,140,255,0.25)',
+                    borderRadius: '10px',
+                    color: '#f4f2ff',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+                  }}
+                  labelStyle={{ color: '#9875ff', fontWeight: 600 }}
                 />
-                <Line type="monotone" dataKey="baseline" stroke="#94A3B8" strokeDasharray="4 4" name="Baseline Target" />
-                <Line type="monotone" dataKey="disrupted" stroke="#EF4444" strokeWidth={2.5} name="Disrupted Production" />
+                <Line
+                  type="monotone"
+                  dataKey="baseline"
+                  stroke="#55a8ff"
+                  strokeDasharray="4 4"
+                  name="Baseline Target"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="disrupted"
+                  stroke="#ff718a"
+                  strokeWidth={2.5}
+                  name="Disrupted Production"
+                  dot={{ fill: '#ff718a', r: 3 }}
+                  activeDot={{ r: 5, stroke: '#f4f2ff', strokeWidth: 2 }}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -224,21 +241,30 @@ export const Overview: React.FC = () => {
                   outerRadius={75}
                   paddingAngle={4}
                   dataKey="count"
+                  stroke="rgba(8,8,23,0.8)"
+                  strokeWidth={2}
                 >
                   {riskDistributionData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'rgba(13,16,36,0.95)',
+                    border: '1px solid rgba(160,140,255,0.25)',
+                    borderRadius: '10px',
+                    color: '#f4f2ff',
+                  }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="grid grid-cols-2 gap-2 text-xs font-mono mt-2 pt-2 border-t border-slate-100">
+          <div className="grid grid-cols-2 gap-2 text-xs font-mono mt-2 pt-2 border-t border-[rgba(160,140,255,0.12)]">
             {riskDistributionData.map((d) => (
               <div key={d.name} className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color }} />
-                <span className="text-slate-600 truncate">{d.name}:</span>
-                <span className="font-bold text-slate-800">{d.count}</span>
+                <span className="w-2 h-2 rounded-full shadow-sm" style={{ backgroundColor: d.color }} />
+                <span className="text-[#a6a4c3] truncate">{d.name}:</span>
+                <span className="font-bold text-[#f4f2ff]">{d.count}</span>
               </div>
             ))}
           </div>
@@ -260,11 +286,18 @@ export const Overview: React.FC = () => {
           <div className="h-56 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={plantUtilizationData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#F1F5F9" />
-                <XAxis type="number" domain={[0, 100]} stroke="#94A3B8" fontSize={11} unit="%" />
-                <YAxis dataKey="name" type="category" stroke="#475569" fontSize={11} width={100} />
-                <Tooltip />
-                <Bar dataKey="utilization" fill="#0284C7" radius={[0, 4, 4, 0]} name="Utilization %" />
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(160,140,255,0.08)" />
+                <XAxis type="number" domain={[0, 100]} stroke="#a6a4c3" fontSize={11} unit="%" tickLine={false} />
+                <YAxis dataKey="name" type="category" stroke="#a6a4c3" fontSize={11} width={100} tickLine={false} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'rgba(13,16,36,0.95)',
+                    border: '1px solid rgba(160,140,255,0.25)',
+                    borderRadius: '10px',
+                    color: '#f4f2ff',
+                  }}
+                />
+                <Bar dataKey="utilization" fill="#7957e8" radius={[0, 4, 4, 0]} name="Utilization %" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -280,25 +313,25 @@ export const Overview: React.FC = () => {
             </Button>
           }
         >
-          <div className="divide-y divide-slate-100 overflow-hidden">
+          <div className="divide-y divide-[rgba(160,140,255,0.1)] overflow-hidden">
             {criticalSuppliers.map((s) => (
               <div key={s.supplier_id} className="py-2.5 flex items-center justify-between text-xs">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-slate-900">{s.name}</span>
+                    <span className="font-semibold text-[#f4f2ff]">{s.name}</span>
                     <Badge variant={s.is_spof ? 'danger' : 'warning'}>
                       {s.is_spof ? 'SPOF' : 'Critical'}
                     </Badge>
                   </div>
-                  <span className="text-slate-500 text-[11px]">
+                  <span className="text-[#a6a4c3] text-[11px]">
                     {s.tier} • {s.country} • Centrality: {s.betweenness_centrality}
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="font-mono text-slate-800 font-medium">
+                  <span className="font-mono text-[#f4f2ff] font-medium">
                     {s.downstream_impact_count} downstream plants
                   </span>
-                  <div className="text-[11px] text-rose-600 font-semibold">
+                  <div className="text-[11px] text-[#ff718a] font-semibold">
                     Risk Score: {s.risk_score}
                   </div>
                 </div>
